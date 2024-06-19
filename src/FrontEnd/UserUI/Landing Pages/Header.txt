@@ -1,0 +1,101 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import SubMenu1 from './Sub Menu/Heaser Sub Menu/SubMenu1';
+import { ContextData } from '../../../App';
+
+function Header() {
+    const [showArrow, setShowArrow] = useState({});
+    const { allBlogs } = useContext(ContextData);
+    const [categories, setCategories] = useState([]);
+    const [SearchSub, setSearchSub] = useState("")
+    const [SubCatData, setSubCatData] = useState([])
+    let ParentArr = [];
+
+    const findparentcatfunc = () => allBlogs.forEach((SubCat) => {
+        if (SubCat.ArticleGrandCategory === SearchSub) {
+            ParentArr.push(SubCat.ArticleParentCategory)
+            setSubCatData(ParentArr)
+        }
+    })
+
+    const extractCategories = () => {
+        const uniqueCategories = [];
+        allBlogs.forEach((blogsdata) => {
+            if (!uniqueCategories.includes(blogsdata.ArticleGrandCategory)) {
+                uniqueCategories.push(blogsdata.ArticleGrandCategory);
+            }
+        });
+        setCategories(uniqueCategories);
+    };
+
+    useEffect(() => {
+        extractCategories();
+        findparentcatfunc();
+        console.log("yahi h", SubCatData)
+
+        console.log("Categories:", categories);
+    }, [allBlogs, SearchSub]);
+
+    const handleArrowToggle = (index) => {
+        setShowArrow((prev) => ({
+            ...prev,
+            [index]: !prev[index]
+        }));
+        // console.log(e.target.value)
+    };
+
+    return (
+        <header className='relative bg-[#2E004D] py-3 flex justify-between px-4 text-white font-semibold'>
+            <img src='https://tradebrains.in/wp-content/uploads/2021/09/shiksha.png' className='w-40 h-16' alt='Logo' />
+            <div className='w-3/5'>
+                <div className='w-full flex'>
+                    <input type='text' placeholder='search here' className='w-full px-2' />
+                    <button className='py-2 px-8 bg-orange-400'>Search</button>
+                </div>
+                <nav className='pt-4'>
+                    <ul className='flex justify-evenly text-sm'>
+                        {categories.map((category, index) => (
+                            <li key={index} className='flex items-center relative'>
+                                <div className='flex items-center' onMouseEnter={() => handleArrowToggle(index)} onMouseLeave={() => handleArrowToggle(index)}>
+                                    <span onMouseEnter={(e) => setSearchSub(e.target.innerText)}>{category}</span>
+                                    <p className='ml-2 mb-1' style={{ display: showArrow[index] ? "none" : "block" }}>
+                                        <FontAwesomeIcon icon={faSortDown} />
+                                    </p>
+                                    <p className='ml-2 mt-1' style={{ display: showArrow[index] ? "block" : "none" }}>
+                                        <FontAwesomeIcon icon={faCaretUp} />
+                                    </p>
+                                    <div className='absolute top-24 left-50 text-black' style={{ display: showArrow[index] ? "block" : "none" }}>
+
+                                        <div className='bg-white w-96 h-96  absolute -top-16'>
+                                            {SubCatData.map((subcategoriesData) => (
+
+                                                <div>
+
+                                                    <p>{subcategoriesData}</p>
+
+                                                </div>
+
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+            <div className='pt-4'>
+                <div>
+                    <p>Ask a query on 9680415819</p>
+                </div>
+                <div className='flex justify-between w-3/2 font-medium text-sm pt-2 float-end [&>p]:pr-4'>
+                    <p>Login</p>
+                    <p>SignUp</p>
+                </div>
+            </div>
+        </header >
+    );
+}
+
+export default Header;
