@@ -68,7 +68,8 @@ const SingleBlogTemplate = () => {
                         <h1 className='border-b-2 border-gray-300 pb-5 pt-5 text-xl font-semibold'>Latest Post</h1>
                         {allBlogs.slice(0,4).map((blogs, index) => (
                             <div key={index} className='flex  pt-5 border-b-2 border-gray-300 pb-5 ' onClick={() => singleblogfnc(blogs._id)}>
-                                <img src= {blogs.file} className='w-14 h-14 rounded-xl mr-2 object-cover cursor-pointer' alt='Latest Post Thumbnail' />
+                                
+                                  <img src= {blogs.file} className='w-14 h-14 rounded-xl mr-2 object-cover cursor-pointer' alt='Latest Post Thumbnail' />
                                 <h1 className='text-gray-700 text-start cursor-pointer'>{blogs.ArticleTitle}</h1>
                             </div>
                         ))}
